@@ -182,10 +182,13 @@ class Client:
 
     def _get_auth_headers(self) -> Dict[str, str]:
         """Helper method to get auth headers."""
-        # What's the corresponding method to get the token
+        token = self.supabase_key
+        if self.auth.session() and 'access_token' in self.auth.session():
+           token = self.auth.session()['access_token']
+        
         headers: Dict[str, str] = {
             "apiKey": self.supabase_key,
-            "Authorization": f"Bearer {self.supabase_key}",
+            "Authorization": f"Bearer {token}",
         }
         return headers
 
