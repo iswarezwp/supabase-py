@@ -28,7 +28,9 @@ def _execute_monkey_patch(self) -> Dict[str, Any]:
         raise NotImplementedError(f"Method '{method}' not recognised.")
     url: str = str(self.session.base_url).rstrip("/")
     query: str = str(self.session.params)
-    response = func(f"{url}?{query}", headers=self.session.headers, **additional_kwargs)
+    headers = self.session.headers
+    headers.update({'Prefer': 'return=representation'})
+    response = func(f"{url}?{query}", headers=headers, **additional_kwargs)
     return {
         "data": response.json(),
         "status_code": response.status_code,
